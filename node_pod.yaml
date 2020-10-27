@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox{{rolename}}
+  namespace: obj
+spec:
+  volumes:
+  - name: data
+    # This volume is based on PVC
+    persistentVolumeClaim:
+      # Name of the PVC created earlier
+      claimName: node-pv-claim{{rolename}}
+  containers:
+  - name: busybox
+    image: busybox:1.28
+    command:
+      - sleep
+      - "3600"
+    volumeMounts:
+      - mountPath: "/storage/{{rolename}}/obj"
+        name: data
+    imagePullPolicy: Always
+  restartPolicy: Always
